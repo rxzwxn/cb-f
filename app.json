@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "ucm",
+    "scheme": "ucm",
     "slug": "ucm",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -18,10 +19,19 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.rizwxn.ucm"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "3d4fadd6-fbff-475e-8c6b-c1836a4b9920"
+      }
     }
   }
 }
