@@ -1,104 +1,275 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router';
-import { login } from '../api/appwrite';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-const HomePage = () => {
-  const router = useRouter(); 
+const IndexScreen = ({ navigation }) => {
 
   const navigateToCarListing = () => {
-    router.push('carlisting'); 
+    navigation.navigate('CarListingScreen'); // Replace with your correct route
   };
 
-  const navigateToviewcars = () => {
-    router.push('viewcars'); 
+  const navigateToViewCars = () => {
+    navigation.navigate('ViewCarsScreen'); // Replace with your correct route
   };
 
-  login().then(function(){
-    console.log('logged in')
-  })
+  const navigateToNotifications = () => {
+    navigation.navigate('NotificationsScreen'); // Replace with your correct route
+  };
 
-
+  const navigateToHome = () => {
+    navigation.navigate('IndexScreen'); // Replace with your correct route
+  };
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Welcome to AutoFinder</Text>
+    <View style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
+        {/* Header */}
+        <View style={styles.headerContainer}>
 
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.button} onPress={navigateToviewcars}>
-          <Text style={styles.buttonText}>Buy a Car</Text>
+          {/* Profile Icon (Left) */}
+          <TouchableOpacity onPress={() => console.log('Go to Profile')}>
+            <Ionicons name="person-circle" size={40} color="#808080" />
+          </TouchableOpacity>
+
+          {/* Logo */}
+          <Image
+            source={{ uri: 'https://via.placeholder.com/150x50' }} // Replace with your logo URL
+            style={styles.logo}
+          />
+          {/* Hamburger Icon (Right) */}
+          <TouchableOpacity onPress={() => console.log('Open Hamburger Menu')}>
+            <Ionicons name="menu" size={40} color="#808080" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Categories Section */}
+        <View style={styles.categoriesContainer}>
+          <Text style={styles.sectionTitle}>Categories</Text>
+          <View style={styles.categoriesRow}>
+            {['Audi', 'BMW', 'Porsche', 'Tesla'].map((category, index) => (
+              <View key={index} style={styles.categoryIconContainer}>
+                <Image
+                  source={{ uri: 'https://via.placeholder.com/50' }} // Replace with your category icons
+                  style={styles.categoryIcon}
+                />
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Recent Searches Section */}
+        <View style={styles.recentSearchesContainer}>
+          <Text style={styles.sectionTitle}>Recent Searches</Text>
+          <Text style={styles.noSearchText}>No searches found</Text>
+        </View>
+
+        {/* Favourites Section */}
+        <View style={styles.favouritesContainer}>
+          <Text style={styles.sectionTitle}>Your Favourites</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {[1, 2].map((item, index) => (
+              <View key={index} style={styles.favouriteCard}>
+                <Image
+                  source={{ uri: 'https://via.placeholder.com/150x100' }} // Replace with your car images
+                  style={styles.favouriteImage}
+                />
+                <Text style={styles.carTitle}>Toyota Fortuner 14 2.8L</Text>
+                <Text style={styles.carPrice}>Rs 1,19,000</Text>
+                <Text style={styles.carDetails}>2023 • 16,500 km</Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Search by Body Type Section */}
+        <View style={styles.bodyTypeContainer}>
+          <Text style={styles.sectionTitle}>Search by Body Type</Text>
+          <View style={styles.categoriesRow}>
+            {['SUV', 'Sedan', 'Hatchback', 'Coupe'].map((type, index) => (
+              <View key={index} style={styles.categoryIconContainer}>
+                <Image
+                  source={{ uri: 'https://via.placeholder.com/50' }} // Replace with body type icons
+                  style={styles.categoryIcon}
+                />
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Search by Budget Section */}
+        <View style={styles.bodyTypeContainer}>
+          <Text style={styles.sectionTitle}>Search by Budget</Text>
+          <View style={styles.categoriesRow}>
+            {['Less than 25L', '25L - 40L', '40L+'].map((budget, index) => (
+              <View key={index} style={styles.categoryIconContainer}>
+                <Image
+                  source={{ uri: 'https://via.placeholder.com/50' }} // Replace with budget icons
+                  style={styles.categoryIcon}
+                />
+                <Text style={styles.budgetText}>{budget}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Search by Ad Type Section */}
+        <View style={styles.bodyTypeContainer}>
+          <Text style={styles.sectionTitle}>Search by Ad Type</Text>
+          <View style={styles.categoriesRow}>
+            {['Price Drop', 'Negotiable'].map((adType, index) => (
+              <View key={index} style={styles.categoryIconContainer}>
+                <Image
+                  source={{ uri: 'https://via.placeholder.com/50' }} // Replace with ad type icons
+                  style={styles.categoryIcon}
+                />
+                <Text style={styles.adTypeText}>{adType}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      </ScrollView>
+
+      {/* Footer Navigation */}
+      <View style={styles.footerContainer}>
+        <TouchableOpacity style={styles.footerButton} onPress={navigateToHome}>
+          <Ionicons name="home" size={24} color="#007BFF" />
+          <Text style={styles.footerText}>Home</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={navigateToCarListing}>
-          <Text style={styles.buttonText}>Sell a Car</Text>
+        <TouchableOpacity style={styles.footerButton} onPress={navigateToCarListing}>
+          <Ionicons name="car" size={24} color="#007BFF" />
+          <Text style={styles.footerText}>Buy</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.footerButton} onPress={navigateToViewCars}>
+          <Ionicons name="add-circle" size={24} color="#007BFF" />
+          <Text style={styles.footerText}>Sell</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.footerButton} onPress={navigateToNotifications}>
+          <Ionicons name="notifications" size={24} color="#007BFF" />
+          <Text style={styles.footerText}>Notifications</Text>
         </TouchableOpacity>
       </View>
-
-      <Text style={styles.featuresTitle}>Features:</Text>
-
-      <View style={styles.featuresContainer}>
-        <Text style={styles.feature}>✓ Browse a wide variety of cars</Text>
-        <Text style={styles.feature}>✓ Advanced search filters</Text>
-        <Text style={styles.feature}>✓ Compare car prices</Text>
-        <Text style={styles.feature}>✓ View detailed car specs and reviews</Text>
-      </View>
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EBEBEB',
-    padding: 20,
-
+    backgroundColor: '#F5F5F5',
   },
-  title: {
-    fontSize: 26,
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#292929',
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+  },
+  logo: {
+    width: 150,
+    height: 50,
+  },
+  categoriesContainer: {
+    marginVertical: 20,
+    paddingHorizontal: 20,
+  },
+  sectionTitle: {
+    fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 30,
-    marginTop: 50,
-    color: '#0A0A0A',
+    marginBottom: 10,
+    color: '#333333',
   },
-  buttonsContainer: {
+  categoriesRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 40,
   },
-  button: {
-    backgroundColor: '#292929',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 8,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: '#FFFFFF',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  featuresTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-    textAlign: 'center',
-  },
-  featuresContainer: {
-    backgroundColor: '#E0E0E0',
-    padding: 20,
-    borderRadius: 8,
+  categoryIconContainer: {
+    backgroundColor: '#FFFFFF',
+    padding: 10,
+    borderRadius: 50,
     shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+    alignItems: 'center',
   },
-  feature: {
+  categoryIcon: {
+    width: 50,
+    height: 50,
+  },
+  budgetText: {
+    fontSize: 12,
+    color: '#333333',
+    marginTop: 5,
+  },
+  adTypeText: {
+    fontSize: 12,
+    color: '#333333',
+    marginTop: 5,
+  },
+  recentSearchesContainer: {
+    marginVertical: 20,
+    paddingHorizontal: 20,
+  },
+  noSearchText: {
     fontSize: 16,
-    color: '#555',
-    marginBottom: 10,
+    color: '#8A8A8A',
+  },
+  favouritesContainer: {
+    marginVertical: 20,
+    paddingHorizontal: 20,
+  },
+  favouriteCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    padding: 10,
+    marginRight: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  favouriteImage: {
+    width: 150,
+    height: 100,
+    borderRadius: 10,
+  },
+  carTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333333',
+    marginTop: 5,
+  },
+  carPrice: {
+    fontSize: 14,
+    color: '#007BFF',
+  },
+  carDetails: {
+    fontSize: 12,
+    color: '#8A8A8A',
+  },
+  bodyTypeContainer: {
+    marginVertical: 20,
+    paddingHorizontal: 20,
+  },
+  footerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
+  },
+  footerButton: {
+    alignItems: 'center',
+  },
+  footerText: {
+    fontSize: 12,
+    color: '#007BFF',
   },
 });
 
-export default HomePage;
+export default IndexScreen;

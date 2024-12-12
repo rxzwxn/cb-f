@@ -1,154 +1,65 @@
-import React, { useState, useEffect } from 'react';
-import { Text, TextInput, TouchableOpacity, StyleSheet, Alert, Image, ScrollView } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import { updatecars } from '../api/appwrite'; 
+import React from 'react';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 
-const AddCarListing = () => {
-  const [carName, setCarName] = useState('');
-  const [carModel, setCarModel] = useState('');
-  const [carYear, setCarYear] = useState('');
-  const [carPrice, setCarPrice] = useState('');
-  const [carCondition, setCarCondition] = useState('');
-  const [carMileage, setCarMileage] = useState('');
-  const [carImage, setCarImage] = useState(null); 
-
-  /*useEffect(() => {
-    testConnection()
-      .then(() => console.log('Appwrite connection is healthy.'))
-      .catch((error) => console.error('Failed to connect to Appwrite:', error));
-  }, []);*/
-
-  const handleAddCar = async () => {
-    if (!carName || !carModel || !carYear || !carPrice || !carCondition || !carMileage || !carImage) {
-      Alert.alert('Error', 'Please fill in all fields and select an image.');
-      return;
-    }
-
-    const years = parseInt(carYear.trim(), 10); 
-    const price = parseInt(carPrice.trim(), 10); 
-    const mileage = parseInt(carMileage.trim(), 10);
-
-    console.log(`Parsed values -> Year: ${years}, Price: ${price}, Mileage: ${mileage}`);
-    console.log('Type check:', {
-      yearsType: typeof years,
-      priceType: typeof price,
-      mileageType: typeof mileage,
-    });
-
-    if (isNaN(years) || isNaN(price) || isNaN(mileage)) {
-      Alert.alert('Error', 'Year, Price, and Mileage must be valid numbers.');
-      return;
-    }
-
-    try {
-      const data = {
-        carname: carName,
-        models: carModel,
-        years: years,
-        price: price,
-        condition: carCondition,
-        mileage: mileage,
-        images: carImage, 
-      };
-      console.log('Final data being sent:', data);
-
-      await updatecars(data);
-      Alert.alert('Success', 'Car listing added successfully!');
-
-      setCarName('');
-      setCarModel('');
-      setCarYear('');
-      setCarPrice('');
-      setCarCondition('');
-      setCarMileage('');
-      setCarImage(null);
-    } catch (error) {
-      console.error("Appwrite Error:", error);
-      Alert.alert('Error', 'Failed to add car listing.');
-    }
-  };
-
-  const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
-      Alert.alert('Permission to access camera roll is required!');
-      return;
-    }
-
-    const result = await ImagePicker.launchImageLibraryAsync();
-    if (!result.canceled) {
-      setCarImage(result.assets[0].uri);
-    }
-  };
+const CarListingScreen = () => {
+  // Sample data
+  const cars = [
+    { id: '1', title: 'Toyota Fortuner 2.8L', price: 'Rs 1,19,000', km: '16,500 km' },
+    { id: '2', title: 'Audi Q5', price: 'Rs 1,50,000', km: '20,000 km' },
+    // Add more cars as needed
+  ];
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Add Car Listing</Text>
-      <TextInput style={styles.input} placeholder="Car Name" value={carName} onChangeText={setCarName} />
-      <TextInput style={styles.input} placeholder="Car Model" value={carModel} onChangeText={setCarModel} />
-      <TextInput style={styles.input} placeholder="Car Year" value={carYear} keyboardType="numeric" onChangeText={setCarYear} />
-      <TextInput style={styles.input} placeholder="Car Price" value={carPrice} keyboardType="numeric" onChangeText={setCarPrice} />
-      <TextInput style={styles.input} placeholder="Car Condition" value={carCondition} onChangeText={setCarCondition} />
-      <TextInput style={styles.input} placeholder="Car Mileage(kmph)" value={carMileage} keyboardType="numeric" onChangeText={setCarMileage} />
-
-      <TouchableOpacity style={styles.imagePickerButton} onPress={pickImage}>
-        <Text style={styles.buttonText}>{carImage ? 'Change Image' : 'Select Image'}</Text>
-      </TouchableOpacity> 
-
-      {carImage && <Image source={{ uri: carImage }} style={styles.imagePreview} />}
-      <TouchableOpacity style={styles.button} onPress={handleAddCar}>
-        <Text style={styles.buttonText}>Submit Listing</Text>
-      </TouchableOpacity>
-    </ScrollView>
+    <View style={styles.container}>
+      <Text style={styles.header}>Car Listings</Text>
+      <FlatList
+        data={cars}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.carCard}>
+            <Text style={styles.carTitle}>{item.title}</Text>
+            <Text style={styles.carPrice}>{item.price}</Text>
+            <Text style={styles.carDetails}>{item.km}</Text>
+          </View>
+        )}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    backgroundColor: '#f8f8f8',
+    flex: 1,
     padding: 20,
+    backgroundColor: '#F5F5F5',
   },
-  title: {
-    fontSize: 26,
+  header: {
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    textAlign: 'center',
-    color: '#333',
   },
-  input: {
-    height: 50,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
+  carCard: {
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    padding: 15,
     marginBottom: 15,
-    fontSize: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 2 },
   },
-  button: {
-    backgroundColor: '#007bff',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonText: {
+  carTitle: {
     fontSize: 18,
-    color: '#fff',
     fontWeight: 'bold',
   },
-  imagePickerButton: {
-    backgroundColor: '#28a745',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 15,
+  carPrice: {
+    fontSize: 16,
+    color: '#007BFF',
   },
-  imagePreview: {
-    width: '100%',
-    height: 200,
-    borderRadius: 8,
-    marginTop: 10,
+  carDetails: {
+    fontSize: 14,
+    color: '#8A8A8A',
   },
 });
 
-export default AddCarListing;
+export default CarListingScreen;
